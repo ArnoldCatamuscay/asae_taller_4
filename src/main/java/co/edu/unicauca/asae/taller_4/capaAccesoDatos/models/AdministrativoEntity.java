@@ -10,14 +10,16 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "Administrativos")
-@PrimaryKeyJoinColumn(name = "IdPersona")
-@Getter @Setter @NoArgsConstructor
-public class AdministrativoEntity extends PersonaEntity{
+@PrimaryKeyJoinColumn(name = "idPersona")
+@Getter
+@Setter
+@NoArgsConstructor
+public class AdministrativoEntity extends PersonaEntity {
     @Column(nullable = false, length = 255)
     private String rol;
 
-    public AdministrativoEntity(int idPersona, String nombre, String apellido, String correo, String rol){
+    public AdministrativoEntity(int idPersona, String nombre, String apellido, String correo, String rol) {
         super(idPersona, nombre, apellido, correo);
-        this.rol=rol;
+        this.rol = rol;
     }
 }

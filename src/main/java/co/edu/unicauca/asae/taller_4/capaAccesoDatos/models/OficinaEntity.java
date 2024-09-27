@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,14 +14,19 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "Oficinas")
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class OficinaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idOficina;
     @Column(nullable = false, length = 20)
-    private String nombre; //varchar20
+    private String nombre;
     private String ubicacion;
 
-    //private Docente objDocente;
+    @OneToOne(mappedBy = "objOficina")
+    private DocenteEntity objDocente;
+
 }
