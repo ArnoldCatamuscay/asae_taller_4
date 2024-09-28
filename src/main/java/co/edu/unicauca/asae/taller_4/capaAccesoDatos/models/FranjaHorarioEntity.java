@@ -2,6 +2,7 @@ package co.edu.unicauca.asae.taller_4.capaAccesoDatos.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,11 +31,11 @@ public class FranjaHorarioEntity {
     LocalTime horaFin;
 
     //* Relaciones */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idCurso", nullable = false)
 	private CursoEntity objCurso;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idEspacioFisico", nullable = false)
 	private EspacioFisicoEntity objEspacioFisico;
 
