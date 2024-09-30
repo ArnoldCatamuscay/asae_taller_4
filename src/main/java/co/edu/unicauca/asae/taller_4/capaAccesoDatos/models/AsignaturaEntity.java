@@ -24,13 +24,13 @@ public class AsignaturaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(length = 255)
+    @Column(length = 255, nullable = false)
     String nombre;
     @Column(length = 50)
     String codigo;
 
     //* Relación */
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "objAsignatura")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "objAsignatura")
 	private List<CursoEntity> cursos;
 
     public AsignaturaEntity() {

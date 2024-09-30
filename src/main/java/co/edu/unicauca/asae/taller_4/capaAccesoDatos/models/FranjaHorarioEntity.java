@@ -25,9 +25,11 @@ public class FranjaHorarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     String dia;
+    @Column(nullable = false)
     LocalTime horaInicio;
+    @Column(nullable = false)
     LocalTime horaFin;
 
     //* Relaciones */
@@ -35,7 +37,7 @@ public class FranjaHorarioEntity {
     @JoinColumn(name = "idCurso", nullable = false)
 	private CursoEntity objCurso;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) //Contradicción en los métodos 4 y 5
     @JoinColumn(name = "idEspacioFisico", nullable = false)
 	private EspacioFisicoEntity objEspacioFisico;
 

@@ -1,6 +1,7 @@
 package co.edu.unicauca.asae.taller_4.capaAccesoDatos.models;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -33,9 +34,20 @@ public class DocenteEntity extends PersonaEntity {
         joinColumns = @JoinColumn(name = "idDocente"), 
         inverseJoinColumns = @JoinColumn(name = "idCurso")
     )
-    private List<CursoEntity> cursos;
+    private Set<CursoEntity> cursos;
 
     public DocenteEntity(int idPersona, String nombre, String apellido, String correo) {
         super(idPersona, nombre, apellido, correo);
+        this.cursos = new HashSet<CursoEntity>();
+    }
+
+    public void addCurso(CursoEntity curso) {
+        this.cursos.add(curso);
+        curso.getDocentes().add(this);
+    }
+
+    public void removeCurso(CursoEntity curso) {
+        this.cursos.remove(curso);
+        curso.getDocentes().remove(this);
     }
 }

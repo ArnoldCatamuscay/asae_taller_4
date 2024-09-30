@@ -20,6 +20,7 @@ import co.edu.unicauca.asae.taller_4.capaAccesoDatos.repositories.DocentesReposi
 import co.edu.unicauca.asae.taller_4.capaAccesoDatos.repositories.EspacioFisicoRepository;
 import co.edu.unicauca.asae.taller_4.capaAccesoDatos.repositories.FranjaHorarioRepository;
 import co.edu.unicauca.asae.taller_4.capaAccesoDatos.repositories.OficinasRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @SpringBootApplication
@@ -51,20 +52,17 @@ public class Taller4Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		//almacenarDocente();
-		//cargarAsignaturas();
-		//cargarEspaciosFisicos();
+		// cargarAsignaturas();
+		// cargarEspaciosFisicos();
 
-		//almacenarCurso();
-		//almacenarFranjaHorario();
+		// crearDocente();
+		// crearCurso();
+		// crearFranjaHorario();
 		
-		//listarFranjasHorarias();
-		//consultarFranjaHorariaPorDocente(1);
+		// listarFranjasHorarias();
+		// consultarFranjaHorariaPorDocente(1);
 		
-		//eliminarCurso(1);
-
-		//consultarDocentes();
-		//consultarOficinas();
+		// eliminarCurso(1);
 	}
 
 	private void consultarOficinas() {
@@ -97,58 +95,69 @@ public class Taller4Application implements CommandLineRunner {
 	}
 
 	//* PRIMER MÉTODO */
-	private void almacenarDocente() {
+	private void crearDocente() {
+		System.out.println("\nLlamando a Crear Docente...\n");
+		DocenteEntity docente = new DocenteEntity();
+		docente.setNombre("Daniel");
+		docente.setApellido("Herrera");
+		docente.setCorreo("dherrera@unicauca.edu.co");
 
 		OficinaEntity objOficina = new OficinaEntity();
-		objOficina.setNombre("Oficina de Andres");
+		objOficina.setNombre("Oficina de Daniel");
 		objOficina.setUbicacion("FIET Piso 3");
-
-		// OficinaEntity objOficinaAlmacenada = this.servicioBDoficinas.save(objOficina);
-		// System.out.println("ID generado para la oficina: " + objOficinaAlmacenada.getIdOficina());
-
-		DocenteEntity docente = new DocenteEntity();
-		docente.setNombre("Andres");
-		docente.setApellido("Torres");
-		docente.setCorreo("atorresp@unicauca.edu.co");
 		docente.setObjOficina(objOficina);
 
 		DocenteEntity objDocenteAlmacenado = this.servicioBDdocentes.save(docente);
-		System.out.println("ID generado para el docente: " + objDocenteAlmacenado.getIdPersona());
+		System.out.println("\nID generado para el docente: " + objDocenteAlmacenado.getIdPersona());
+		System.out.println("\nNombre completo: " + objDocenteAlmacenado.getNombre() + 
+			" " + objDocenteAlmacenado.getApellido());
+		System.out.println("\nCorreo: " + objDocenteAlmacenado.getCorreo());
+		System.out.println("\nOficina: " + objDocenteAlmacenado.getObjOficina().getNombre() + 
+			" - " + objDocenteAlmacenado.getObjOficina().getUbicacion() + "\n");
 	}
 
 	//* SEGUNDO MÉTODO */
-	public void almacenarCurso() {
-		System.out.println("\nLlamando a Almacenar Curso...\n");
-		Optional<AsignaturaEntity> asignaturaUno = this.servicioBDasignaturas.findById(1);
-		Optional<DocenteEntity> docenteUno = this.servicioBDdocentes.findById(1);
-		System.out.println("\nAsignatura: " + asignaturaUno.get().getNombre());
-		System.out.println("Docente: " + docenteUno.get().getNombre() + "\n");
+	//? Pide usar PERSIST
+	public void crearCurso() {
+		System.out.println("\nLlamando a Crear Curso...\n");
+		Optional<AsignaturaEntity> asignatura = this.servicioBDasignaturas.findById(1);
+		Optional<DocenteEntity> docente = this.servicioBDdocentes.findById(1);
 		
 		CursoEntity nuevoCurso = new CursoEntity();
 		nuevoCurso.setNombre("Grupo A");
-		nuevoCurso.setObjAsignatura(asignaturaUno.get());
+		nuevoCurso.setObjAsignatura(asignatura.get());
 
 		CursoEntity cursoAlmacenado = this.servicioBDcursos.save(nuevoCurso);
-		System.out.println("\nID generado para el curso: " + cursoAlmacenado.getId() + "\n");
+		System.out.println("\nID generado para el curso: " + cursoAlmacenado.getId());
+		System.out.println("\nAsignatura asociada: " + cursoAlmacenado.getObjAsignatura().getNombre());
+		System.out.println("\nNombre del curso: " + cursoAlmacenado.getNombre());
+		System.out.println("\nDocente asociado: " + docente.get().getNombre() + " " + docente.get().getApellido() + "\n");
 
-		docenteUno.get().getCursos().add(cursoAlmacenado);
+		docente.get().getCursos().add(cursoAlmacenado);
 	}
 
 	//* TERCER MÉTODO */
-	public void almacenarFranjaHorario() {
-		System.out.println("\nLlamando a Almacenar Franja Horario...\n");
-		Optional<CursoEntity> cursoUno = this.servicioBDcursos.findById(1);
-		Optional<EspacioFisicoEntity> espacioFisicoUno = this.servicioBDespaciosFisicos.findById(2);
+	public void crearFranjaHorario() {
+		System.out.println("\nLlamando a Crear Franja Horario...\n");
+		Optional<CursoEntity> curso = this.servicioBDcursos.findById(2);
+		Optional<EspacioFisicoEntity> espacioFisico = this.servicioBDespaciosFisicos.findById(3);
 
 		FranjaHorarioEntity nuevaFranja = new FranjaHorarioEntity();
-		nuevaFranja.setDia("Miércoles");
-		nuevaFranja.setHoraInicio(java.time.LocalTime.of(16, 0));
-		nuevaFranja.setHoraFin(java.time.LocalTime.of(18, 0));
-		nuevaFranja.setObjCurso(cursoUno.get());
-		nuevaFranja.setObjEspacioFisico(espacioFisicoUno.get());
+		nuevaFranja.setDia("Lunes");
+		nuevaFranja.setHoraInicio(java.time.LocalTime.of(9, 0));
+		nuevaFranja.setHoraFin(java.time.LocalTime.of(11, 0));
+		nuevaFranja.setObjCurso(curso.get());
+		nuevaFranja.setObjEspacioFisico(espacioFisico.get());
 
 		FranjaHorarioEntity franjaAlmacenada = this.servicioBDfranjasHorarias.save(nuevaFranja);
-		System.out.println("\nID generado para la franja horaria: " + franjaAlmacenada.getId() + "\n");
+		System.out.println("\nID generado para la franja horaria: " + franjaAlmacenada.getId());
+		System.out.println("\nDía: " + franjaAlmacenada.getDia());
+		System.out.println("\nDuración: " + franjaAlmacenada.getHoraInicio() +
+			" - " + franjaAlmacenada.getHoraFin());
+		System.out.println("\nAsignatura: " + franjaAlmacenada.getObjCurso().getObjAsignatura().getNombre());
+		System.out.println("\nCurso: " + franjaAlmacenada.getObjCurso().getNombre());
+		System.out.println("\nEspacio físico: " + franjaAlmacenada.getObjEspacioFisico().getNombre());
+		System.out.println("\nCapacidad: " + franjaAlmacenada.getObjEspacioFisico().getCapacidad() + "\n");
 	}
 
 	//* CUARTO MÉTODO */
@@ -158,11 +167,12 @@ public class Taller4Application implements CommandLineRunner {
 		System.out.println("\n");
 		for (FranjaHorarioEntity franja : listaFranjas) {
 			System.out.println("[ Franja Horaria ]");
+			System.out.println("ID: " + franja.getId());
 			System.out.println("Día: " + franja.getDia());
-			System.out.println("Hora de inicio: " + franja.getHoraInicio());
-			System.out.println("Hora de fin: " + franja.getHoraFin());
+			System.out.println("Duración: " + franja.getHoraInicio() + " - " + franja.getHoraFin());
 			System.out.println("<Curso asociado>");
-			System.out.println("Nombre: " + franja.getObjCurso().getNombre());
+			System.out.println("Asignatura: " + franja.getObjCurso().getObjAsignatura().getNombre());
+			System.out.println("Curso: " + franja.getObjCurso().getNombre());
 			System.out.println("<Espacio físico asociado>");
 			System.out.println("Nombre: " + franja.getObjEspacioFisico().getNombre());
 			System.out.println("Capacidad: " + franja.getObjEspacioFisico().getCapacidad());
@@ -174,8 +184,8 @@ public class Taller4Application implements CommandLineRunner {
 	//* QUINTO MÉTODO */
 	public void consultarFranjaHorariaPorDocente(int idDocente) {
 		System.out.println("\nLlamando a Consultar Franja Horaria Por Docente...\n");
-		Optional<DocenteEntity> docenteUno = this.servicioBDdocentes.findById(idDocente);
-		var listaCursos = docenteUno.get().getCursos();
+		Optional<DocenteEntity> docente = this.servicioBDdocentes.findById(idDocente);
+		var listaCursos = docente.get().getCursos();
 		if(listaCursos.isEmpty()) {
 			System.out.println("El docente no tiene cursos asignados.");
 			return;
@@ -186,32 +196,34 @@ public class Taller4Application implements CommandLineRunner {
 				System.out.println("\n[ Franja Horaria ]");
 				System.out.println("ID de la franja: " + franjaHorarioEntity.getId());
 				System.out.println("<Docente asociado>");
-				System.out.println("ID del docente: " + docenteUno.get().getIdPersona());
-				System.out.println("Nombre del docente: " + docenteUno.get().getNombre());
-				System.out.println("Apellido del docente: " + docenteUno.get().getApellido());
-				System.out.println("Correo del docente: " + docenteUno.get().getCorreo());
+				System.out.println("ID: " + docente.get().getIdPersona());
+				System.out.println("Nombre completo: " + docente.get().getNombre() +
+					" " + docente.get().getApellido());
+				System.out.println("Correo: " + docente.get().getCorreo());
 				System.out.println("<Curso asociado>");
-				System.out.println("ID del curso: " + cursoEntity.getId());
-				System.out.println("Nombre del curso: " + cursoEntity.getNombre());
+				System.out.println("ID: " + cursoEntity.getId());
+				System.out.println("Asignatura: " + cursoEntity.getObjAsignatura().getNombre());
+				System.out.println("Nombre: " + cursoEntity.getNombre());
 				System.out.println("<Espacio físico asociado>");
-				System.out.println("ID del espacio físico: " + franjaHorarioEntity.getObjEspacioFisico().getId());
-				System.out.println("Nombre del espacio físico: " + franjaHorarioEntity.getObjEspacioFisico().getNombre());
+				System.out.println("ID: " + franjaHorarioEntity.getObjEspacioFisico().getId());
+				System.out.println("Nombre: " + franjaHorarioEntity.getObjEspacioFisico().getNombre());
+				System.out.println("Capacidad: " + franjaHorarioEntity.getObjEspacioFisico().getCapacidad());
 			}
 		}
 		System.out.println("\n");
 	}
 
 	//* SEXTO MÉTODO */
-	public void eliminarCurso(int idCurso) {
-		System.out.println("\nLlamando a Eliminar Curso[eliminando en cascada las franjas asociadas]...\n");
-		Optional<DocenteEntity> docenteUno = this.servicioBDdocentes.findById(1);
-		for (CursoEntity curso : docenteUno.get().getCursos()) {
-			if (curso.getId() == idCurso) {
-				docenteUno.get().getCursos().remove(curso);
-				break;
-			}
+	public void eliminarCurso(int cursoId) {
+		System.out.println("\nLlamando a Eliminar Curso...\n");
+		CursoEntity curso = servicioBDcursos.findById(cursoId)
+			.orElseThrow(() -> new EntityNotFoundException("Curso no encontrado"));
+		// Eliminar las referencias en la tabla de unión
+		for (DocenteEntity docente : curso.getDocentes()) {
+			docente.removeCurso(curso);
 		}
-		this.servicioBDcursos.deleteById(idCurso);
+		// Eliminar el curso
+		servicioBDcursos.delete(curso);
 	}
 
 	public void cargarAsignaturas() {
