@@ -117,12 +117,18 @@ public class Taller4Application implements CommandLineRunner {
 	}
 
 	//* SEGUNDO MÉTODO */
-	//? Pide usar PERSIST
 	public void crearCurso() {
 		System.out.println("\nLlamando a Crear Curso...\n");
 		Optional<AsignaturaEntity> asignatura = this.servicioBDasignaturas.findById(1);
+		if(asignatura.isEmpty()) {
+			System.out.println("No se encontró la asignatura.");
+			return;
+		}
 		Optional<DocenteEntity> docente = this.servicioBDdocentes.findById(1);
-		
+		if(docente.isEmpty()) {
+			System.out.println("No se encontró el docente.");
+			return;
+		}
 		CursoEntity nuevoCurso = new CursoEntity();
 		nuevoCurso.setNombre("Grupo A");
 		nuevoCurso.setObjAsignatura(asignatura.get());
@@ -131,9 +137,9 @@ public class Taller4Application implements CommandLineRunner {
 		System.out.println("\nID generado para el curso: " + cursoAlmacenado.getId());
 		System.out.println("\nAsignatura asociada: " + cursoAlmacenado.getObjAsignatura().getNombre());
 		System.out.println("\nNombre del curso: " + cursoAlmacenado.getNombre());
+		
+		docente.get().addCurso(cursoAlmacenado);
 		System.out.println("\nDocente asociado: " + docente.get().getNombre() + " " + docente.get().getApellido() + "\n");
-
-		docente.get().getCursos().add(cursoAlmacenado);
 	}
 
 	//* TERCER MÉTODO */
@@ -224,6 +230,7 @@ public class Taller4Application implements CommandLineRunner {
 		}
 		// Eliminar el curso
 		servicioBDcursos.delete(curso);
+		System.out.println("\nCurso eliminado.\n");
 	}
 
 	public void cargarAsignaturas() {
