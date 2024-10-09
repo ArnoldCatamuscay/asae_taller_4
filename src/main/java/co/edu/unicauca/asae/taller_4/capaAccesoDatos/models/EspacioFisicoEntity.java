@@ -1,5 +1,6 @@
 package co.edu.unicauca.asae.taller_4.capaAccesoDatos.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -12,13 +13,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "EspaciosFisicos")
 public class EspacioFisicoEntity {
@@ -32,4 +31,8 @@ public class EspacioFisicoEntity {
     //* Relación */
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "objEspacioFisico")
 	private List<FranjaHorarioEntity> franjasHorario;
+
+    public EspacioFisicoEntity() {
+        this.franjasHorario = new ArrayList<FranjaHorarioEntity>();
+    }
 }
